@@ -1,3 +1,7 @@
+<script context="module" lang="ts">
+	export const hydrate = true;
+</script>
+
 <script lang="ts">
 	import Gniben from '$lib/gniben.svelte';
 
@@ -137,8 +141,5 @@
 
 	.subtitle {
 		@apply text-sm;
-	}
-	body {
-		@apply bg-gray-100;
 	}
 </style>

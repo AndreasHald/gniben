@@ -126,7 +126,7 @@
 		| HTMLSelectElement
 		| HTMLDetailsElement;
 
-	export function getFocusableElements(element: Element | undefined): FocusableElement[] {
+	function getFocusableElements(element: Element | undefined): FocusableElement[] {
 		if (element) {
 			const elements = Array.from(
 				element.querySelectorAll(
