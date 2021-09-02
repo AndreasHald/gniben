@@ -26,6 +26,27 @@
 	let observer: MutationObserver;
 	let open: boolean;
 
+	interface $$Slots {
+		content: {
+			open: boolean;
+			element: HTMLDetailsElement;
+			target: HTMLElement;
+			content: HTMLDivElement;
+		};
+		target: {
+			open: boolean;
+			element: HTMLDetailsElement;
+			target: HTMLElement;
+			content: HTMLDivElement;
+		};
+		default: {
+			open: boolean;
+			element: HTMLDetailsElement;
+			target: HTMLElement;
+			content: HTMLDivElement;
+		};
+	}
+
 	onMount(() => {
 		hydrated = true;
 		instance = createPopper(target, content, {
@@ -185,10 +206,10 @@
 
 <details class={detailsClasses} on:toggle={handleToggle} bind:this={element} class:nojs={!hydrated}>
 	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
-		<slot {open} name="target">Click me</slot>
+		<slot {open} {element} {target} {content} name="target">Click me</slot>
 	</summary>
 	<div bind:this={content} class={contentClasses}>
-		<slot {open} name="content">popover content</slot>
+		<slot {open} {element} {target} {content} name="content">popover content</slot>
 	</div>
 </details>
 
