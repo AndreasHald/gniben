@@ -26,27 +26,6 @@
 	let observer: MutationObserver;
 	let open: boolean;
 
-	interface $$Slots {
-		content: {
-			open: boolean;
-			element: HTMLDetailsElement;
-			target: HTMLElement;
-			content: HTMLDivElement;
-		};
-		target: {
-			open: boolean;
-			element: HTMLDetailsElement;
-			target: HTMLElement;
-			content: HTMLDivElement;
-		};
-		default: {
-			open: boolean;
-			element: HTMLDetailsElement;
-			target: HTMLElement;
-			content: HTMLDivElement;
-		};
-	}
-
 	onMount(() => {
 		hydrated = true;
 		instance = createPopper(target, content, {

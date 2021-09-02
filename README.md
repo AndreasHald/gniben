@@ -23,6 +23,36 @@ npm i gniben
 </Gniben>
 ```
 
+## Attributes
+
+Gniben will check certain attributes on the content within the slots in order to provide better functionality
+
+### data-gniben-close
+
+Click events on elements with the data attribute gniben-close will automatically close the popover
+
+```html
+<Gniben>
+	<button slot="target">Toggle</button>
+	<div slot="content">
+		<button data-gniben-close>Clicking me will close the popover</button>
+	</div>
+</Gniben>
+```
+
+### autofocus
+
+When opening the popover Gniben will automatically focus the first element in the content slot that has the attribute autofocus (if any).
+
+```html
+<Gniben>
+	<button slot="target">Toggle</button>
+	<div slot="content">
+		<input autofocus />
+	</div>
+</Gniben>
+```
+
 ## Slots
 
 ### Open
