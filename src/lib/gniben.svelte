@@ -41,8 +41,8 @@
 		return () => {
 			instance.destroy();
 			observer.disconnect();
-			window.removeEventListener('click', handleClick);
-			window.removeEventListener('keydown', handleKeys);
+			document.removeEventListener('click', handleClick, { capture: true });
+			document.removeEventListener('keydown', handleKeys, { capture: true });
 		};
 	});
 
@@ -69,6 +69,7 @@
 		if (code === 'Escape' && element.hasAttribute('open')) {
 			element.open = false;
 			target.focus();
+			event.stopPropagation();
 			return;
 		}
 
@@ -151,8 +152,8 @@
 			modifiers: [offsetModifier, { name: 'eventListeners', enabled: false }]
 		});
 
-		window.removeEventListener('keydown', handleKeys);
-		window.removeEventListener('click', handleClick);
+		document.removeEventListener('keydown', handleKeys, { capture: true });
+		document.removeEventListener('click', handleClick, { capture: true });
 
 		observer.disconnect();
 
@@ -167,8 +168,8 @@
 			childList: true
 		});
 
-		window.addEventListener('keydown', handleKeys);
-		window.addEventListener('click', handleClick);
+		document.addEventListener('keydown', handleKeys, { capture: true });
+		document.addEventListener('click', handleClick, { capture: true });
 
 		const elementToFocus = content.querySelector('[autofocus]');
 		if (elementToFocus && 'focus' in elementToFocus) {
