@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { createPopper } from '@popperjs/core';
 	import type { Instance, Placement } from '@popperjs/core';
 
@@ -9,7 +9,7 @@
 	export let targetClasses =
 		'cursor-pointer inline marker-none rounded focus:outline-none focus:ring ring-indigo-500';
 	export let contentClasses =
-		'fixed mt-1 rounded-md bg-white border border-gray-300 shadow-lg flex flex-col overflow-hidden';
+		'rounded-md bg-white border border-gray-300 shadow-lg flex flex-col overflow-hidden';
 
 	const offsetModifier = {
 		name: 'offset',
@@ -28,19 +28,10 @@
 
 	onMount(() => {
 		hydrated = true;
-		instance = createPopper(target, content, {
-			placement,
-			strategy: 'fixed',
-			modifiers: [{ name: 'eventListeners', enabled: false }]
-		});
-
-		observer = new MutationObserver((mutations) => {
-			instance.update();
-		});
 
 		return () => {
-			instance.destroy();
-			observer.disconnect();
+			if (instance) instance.destroy();
+			if (observer) observer.disconnect();
 			document.removeEventListener('click', handleClick, { capture: true });
 			document.removeEventListener('keydown', handleKeys, { capture: true });
 		};
@@ -131,15 +122,15 @@
 		if (element) {
 			const elements = Array.from(
 				element.querySelectorAll(
-					'a, button, input, textarea, select, summary, [tabindex]:not([disabled]):not([tabindex="-1"])'
+					'a, button:not(:disabled), input:not(:disabled):not([tabindex="-1"]), textarea:not(:disabled), select:not(:disabled), summary, [tabindex]:not([tabindex="-1"])'
 				)
 			) as Array<FocusableElement>;
-			return elements.filter((el) => !el.hasAttribute('disabled'));
+			return elements;
 		}
 		return [];
 	}
 
-	function handleToggle(event: Event) {
+	function handleToggle() {
 		if (element.hasAttribute('open')) {
 			handleOpen();
 		} else {
@@ -160,7 +151,27 @@
 		open = false;
 	}
 
-	function handleOpen() {
+	function init() {
+		if (!instance)
+			instance = createPopper(target, content, {
+				placement,
+				strategy: 'fixed',
+				modifiers: [{ name: 'eventListeners', enabled: false }]
+			});
+
+		if (!observer)
+			observer = new MutationObserver(() => {
+				instance.update();
+			});
+	}
+
+	async function handleOpen() {
+		init();
+		instance.setOptions({
+			modifiers: [offsetModifier, { name: 'eventListeners', enabled: true }]
+		});
+		instance.forceUpdate();
+
 		open = true;
 
 		observer.observe(content, {
@@ -171,15 +182,11 @@
 		document.addEventListener('keydown', handleKeys, { capture: true });
 		document.addEventListener('click', handleClick, { capture: true });
 
+		await tick();
 		const elementToFocus = content.querySelector('[autofocus]');
 		if (elementToFocus && 'focus' in elementToFocus) {
 			(elementToFocus as FocusableElement).focus();
 		}
-
-		instance.forceUpdate();
-		instance.setOptions({
-			modifiers: [offsetModifier, { name: 'eventListeners', enabled: true }]
-		});
 	}
 </script>
 
@@ -187,12 +194,96 @@
 	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
 		<slot {open} {element} {target} {content} name="target">Click me</slot>
 	</summary>
-	<div bind:this={content} class={contentClasses}>
-		<slot {open} {element} {target} {content} name="content">popover content</slot>
+	<div bind:this={content} class="absolute {placement}" class:invisible={open === false}>
+		<div class={contentClasses}>
+			<slot {open} {element} {target} {content} name="content">popover content</slot>
+		</div>
 	</div>
 </details>
 
-<style>
+<style lang="postcss">
+	@keyframes open {
+		0% {
+			opacity: 0;
+			transform: scale(0.9);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	details[open] div div {
+		animation: open 0.1s ease-in-out;
+	}
+	/* Placement nojs styles */
+	.bottom {
+		@apply top-full;
+		@apply mt-1;
+		@apply left-1/2;
+		transform: translate(-50%, 0);
+	}
+	.bottom-end {
+		@apply top-full;
+		@apply right-0;
+		@apply mt-1;
+	}
+	.bottom-start {
+		@apply top-full;
+		@apply left-0;
+		@apply mt-1;
+	}
+
+	.top {
+		@apply bottom-full;
+		@apply mb-1;
+		@apply left-1/2;
+		transform: translate(-50%, 0);
+	}
+	.top-end {
+		@apply bottom-full;
+		@apply right-0;
+		@apply mb-1;
+	}
+	.top-start {
+		@apply bottom-full;
+		@apply left-0;
+		@apply mb-1;
+	}
+
+	.left {
+		@apply right-full;
+		@apply top-1/2;
+		@apply mr-1;
+		transform: translate(0, -50%);
+	}
+	.left-end {
+		@apply right-full;
+		@apply top-full;
+		@apply mr-1;
+	}
+	.left-start {
+		@apply right-full;
+		@apply top-0;
+		@apply mr-1;
+	}
+	.right {
+		@apply left-full;
+		@apply top-1/2;
+		@apply ml-1;
+		transform: translate(0, -50%);
+	}
+	.right-end {
+		@apply left-full;
+		@apply top-full;
+		@apply ml-1;
+	}
+	.right-start {
+		@apply left-full;
+		@apply top-0;
+		@apply ml-1;
+	}
+
 	.marker-none {
 		list-style-type: none;
 	}
@@ -200,6 +291,9 @@
 		display: none;
 	}
 
+	.nojs {
+		@apply relative;
+	}
 	.nojs[open] > summary::before {
 		background: transparent;
 		bottom: 0;

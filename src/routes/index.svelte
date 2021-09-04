@@ -12,7 +12,7 @@
 	}
 </script>
 
-<div class="space-y-8 px-8">
+<div class="max-w-xl mx-auto space-y-20">
 	<div>
 		<h4 class="header">Simple</h4>
 		<Gniben>
