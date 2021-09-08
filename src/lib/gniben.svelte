@@ -3,8 +3,11 @@
 	import { createPopper } from '@popperjs/core';
 	import type { Instance, Placement } from '@popperjs/core';
 
+	type Direction = 'top' | 'bottom' | 'left' | 'right';
+
 	export let placement: Placement = 'bottom-end';
 	export let disabled = false;
+	export let matchWidth = false;
 	export let detailsClasses = 'inline';
 	export let targetClasses =
 		'cursor-pointer inline marker-none rounded focus:outline-none focus:ring ring-indigo-500';
@@ -18,13 +21,23 @@
 		}
 	};
 
+	function getDirection(placement: Placement): Direction {
+		if (['top', 'top-start', 'top-end'].includes(placement)) return 'top';
+		if (['bottom', 'bottom-start', 'bottom-end'].includes(placement)) return 'bottom';
+		if (['left', 'left-start', 'left-end'].includes(placement)) return 'left';
+		if (['right', 'right-start', 'right-end'].includes(placement)) return 'right';
+	}
+
 	let hydrated = false;
 	let element: HTMLDetailsElement;
 	let target: HTMLElement;
+	let targetWidth: number;
+	let contentOuter: HTMLDivElement;
 	let content: HTMLDivElement;
 	let instance: Instance;
 	let observer: MutationObserver;
 	let open: boolean;
+	$: direction = getDirection(placement);
 
 	onMount(() => {
 		hydrated = true;
@@ -149,6 +162,8 @@
 		observer.disconnect();
 
 		open = false;
+
+		// contentOuter.appendChild(content);
 	}
 
 	function init() {
@@ -182,6 +197,8 @@
 		document.addEventListener('keydown', handleKeys, { capture: true });
 		document.addEventListener('click', handleClick, { capture: true });
 
+		// document.body.appendChild(content);
+
 		await tick();
 		const elementToFocus = content.querySelector('[autofocus]');
 		if (elementToFocus && 'focus' in elementToFocus) {
@@ -191,31 +208,83 @@
 </script>
 
 <details class={detailsClasses} on:toggle={handleToggle} bind:this={element} class:nojs={!hydrated}>
-	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
+	<summary
+		bind:clientWidth={targetWidth}
+		bind:this={target}
+		class:pointer-events-none={disabled}
+		class={targetClasses}
+	>
 		<slot {open} {element} {target} {content} name="target">Click me</slot>
 	</summary>
-	<div bind:this={content} class="absolute {placement}" class:invisible={open === false}>
-		<div class={contentClasses}>
-			<slot {open} {element} {target} {content} name="content">popover content</slot>
+	<div bind:this={contentOuter}>
+		<div
+			bind:this={content}
+			style={matchWidth ? `width:${targetWidth}px;` : ''}
+			class="absolute {placement}"
+			class:invisible={open === false}
+		>
+			<div class="{contentClasses} {direction}-open">
+				<slot {open} {element} {target} {content} name="content">popover content</slot>
+			</div>
 		</div>
 	</div>
 </details>
 
 <style lang="postcss">
-	@keyframes open {
+	@keyframes bottom-open {
 		0% {
 			opacity: 0;
-			transform: scale(0.9);
+			transform: scale(0.9) translateY(-10px);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1);
+			transform: scale(1) translateY(0px);
+		}
+	}
+	@keyframes top-open {
+		0% {
+			opacity: 0;
+			transform: scale(0.9) translateY(10px);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1) translateY(0px);
+		}
+	}
+	@keyframes left-open {
+		0% {
+			opacity: 0;
+			transform: scale(0.9) translateX(10px);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1) translateX(0px);
+		}
+	}
+	@keyframes right-open {
+		0% {
+			opacity: 0;
+			transform: scale(0.9) translateX(-10px);
+		}
+		100% {
+			opacity: 1;
+			transform: scale(1) translateX(0px);
 		}
 	}
 
-	details[open] div div {
-		animation: open 0.1s ease-in-out;
+	.bottom-open {
+		animation: bottom-open 0.1s ease-in-out;
 	}
+	.top-open {
+		animation: top-open 0.1s ease-in-out;
+	}
+	.left-open {
+		animation: left-open 0.1s ease-in-out;
+	}
+	.right-open {
+		animation: right-open 0.1s ease-in-out;
+	}
+
 	/* Placement nojs styles */
 	.bottom {
 		@apply top-full;

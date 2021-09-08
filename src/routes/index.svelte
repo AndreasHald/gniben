@@ -116,6 +116,16 @@
 			</div>
 		</Gniben>
 	</div>
+	<div>
+		<h4 class="header">Match width</h4>
+		<p class="subtitle" />
+		<Gniben matchWidth>
+			<div slot="target" class="button">Open me</div>
+			<div slot="content">
+				<button class="button border-0" data-gniben-close>Click me to close</button>
+			</div>
+		</Gniben>
+	</div>
 	<div class="mt-auto">
 		<h4 class="header">Positional</h4>
 		<p class="subtitle">Resize window to attempt to overflow</p>
