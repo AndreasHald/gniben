@@ -53,7 +53,10 @@
 	function handleClick(event: MouseEvent) {
 		if (!event.target) return;
 		if (event.target instanceof HTMLElement) {
-			if (event.target.hasAttribute('data-gniben-close')) {
+			if (
+				event.target.hasAttribute('data-gniben-close') &&
+				event.target.getAttribute('data-gniben-close') !== 'false'
+			) {
 				element.open = false;
 			}
 		}
@@ -182,14 +185,14 @@
 
 	async function handleOpen() {
 		init();
+		if (matchWidth) {
+			targetWidth = target.clientWidth;
+		}
+		await tick();
 		instance.setOptions({
 			modifiers: [offsetModifier, { name: 'eventListeners', enabled: true }]
 		});
 		instance.forceUpdate();
-
-		if (matchWidth) {
-			targetWidth = target.clientWidth;
-		}
 
 		open = true;
 
@@ -211,7 +214,13 @@
 	}
 </script>
 
-<details class={detailsClasses} on:toggle={handleToggle} bind:this={element} class:nojs={!hydrated}>
+<details
+	on:click
+	class={detailsClasses}
+	on:toggle={handleToggle}
+	bind:this={element}
+	class:nojs={!hydrated}
+>
 	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
 		<slot {open} {element} {target} {content} name="target">Click me</slot>
 	</summary>
