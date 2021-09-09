@@ -187,6 +187,10 @@
 		});
 		instance.forceUpdate();
 
+		if (matchWidth) {
+			targetWidth = target.clientWidth;
+		}
+
 		open = true;
 
 		observer.observe(content, {
@@ -208,12 +212,7 @@
 </script>
 
 <details class={detailsClasses} on:toggle={handleToggle} bind:this={element} class:nojs={!hydrated}>
-	<summary
-		bind:clientWidth={targetWidth}
-		bind:this={target}
-		class:pointer-events-none={disabled}
-		class={targetClasses}
-	>
+	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
 		<slot {open} {element} {target} {content} name="target">Click me</slot>
 	</summary>
 	<div bind:this={contentOuter}>
