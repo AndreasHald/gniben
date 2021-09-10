@@ -222,7 +222,7 @@
 	class:nojs={!hydrated}
 >
 	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
-		<slot {open} {element} {target} {content} name="target">Click me</slot>
+		<slot {open} {element} {target} {content} {hydrated} name="target">Click me</slot>
 	</summary>
 	<div bind:this={contentOuter}>
 		<div
@@ -232,13 +232,14 @@
 			class:invisible={open === false}
 		>
 			<div class="{contentClasses} {direction}-open">
-				<slot {open} {element} {target} {content} name="content">popover content</slot>
+				<slot {open} {element} {target} {content} {hydrated} name="content">popover content</slot>
 			</div>
 		</div>
 	</div>
 </details>
 
 <style lang="postcss">
+	/* Animation styles */
 	@keyframes bottom-open {
 		0% {
 			opacity: 0;
@@ -294,73 +295,128 @@
 	}
 
 	/* Placement nojs styles */
-	.bottom {
+
+	/** 
+	* BOTTOM
+	*/
+
+	/* All bottom elements should be placed beneath */
+	.bottom,
+	.bottom-end,
+	.bottom-start {
 		@apply top-full;
+	}
+
+	/* If js is not available all bottom elements should have margin top  */
+	.nojs .bottom,
+	.nojs .bottom-end,
+	.nojs .bottom-start {
 		@apply mt-1;
+	}
+
+	/* Specific styles to place different bottom elements */
+	.bottom {
 		@apply left-1/2;
 		transform: translate(-50%, 0);
 	}
 	.bottom-end {
-		@apply top-full;
 		@apply right-0;
-		@apply mt-1;
 	}
 	.bottom-start {
-		@apply top-full;
 		@apply left-0;
-		@apply mt-1;
 	}
 
-	.top {
+	/** 
+	* TOP
+	*/
+
+	/* All top elements should be placed on top */
+	.top,
+	.top-end,
+	.top-start {
 		@apply bottom-full;
+	}
+
+	/* If js is not available all top elements should have margin bottom  */
+	.nojs .top,
+	.nojs .top-end,
+	.nojs .top-start {
 		@apply mb-1;
+	}
+
+	/* Specific styles to place different top elements */
+	.top {
 		@apply left-1/2;
 		transform: translate(-50%, 0);
 	}
 	.top-end {
-		@apply bottom-full;
 		@apply right-0;
-		@apply mb-1;
 	}
 	.top-start {
-		@apply bottom-full;
 		@apply left-0;
-		@apply mb-1;
 	}
 
-	.left {
+	/** 
+	* LEFT
+	*/
+
+	/* All left elements should be placed on left */
+	.left,
+	.left-end,
+	.left-start {
 		@apply right-full;
-		@apply top-1/2;
+	}
+
+	/* If js is not available all left elements should have margin right  */
+	.nojs .left,
+	.nojs .left-end,
+	.nojs .left-start {
 		@apply mr-1;
+	}
+
+	/* Specific styles to place different left elements */
+	.left {
+		@apply top-1/2;
 		transform: translate(0, -50%);
 	}
 	.left-end {
-		@apply right-full;
 		@apply top-full;
-		@apply mr-1;
 	}
 	.left-start {
-		@apply right-full;
 		@apply top-0;
-		@apply mr-1;
 	}
-	.right {
-		@apply left-full;
-		@apply top-1/2;
-		@apply ml-1;
-		transform: translate(0, -50%);
-	}
-	.right-end {
-		@apply left-full;
-		@apply top-full;
-		@apply ml-1;
-	}
+
+	/** 
+	* LEFT
+	*/
+
+	/* All left elements should be placed on right */
+	.right,
+	.right-end,
 	.right-start {
 		@apply left-full;
-		@apply top-0;
+	}
+
+	/* If js is not available all left elements should have margin left  */
+	.nojs .right,
+	.nojs .right-end,
+	.nojs .right-start {
 		@apply ml-1;
 	}
 
+	/* Specific styles to place different right elements */
+	.right {
+		@apply top-1/2;
+		transform: translate(0, -50%);
+	}
+	.right-end {
+		@apply top-full;
+	}
+	.right-start {
+		@apply top-0;
+	}
+
+	/* Class to remove default details summary arrow */
 	.marker-none {
 		list-style-type: none;
 	}
@@ -368,6 +424,7 @@
 		display: none;
 	}
 
+	/* Class that is applied when JS is not available (during ssr) */
 	.nojs {
 		@apply relative;
 	}
