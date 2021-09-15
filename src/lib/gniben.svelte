@@ -218,6 +218,7 @@
 	on:click
 	class={detailsClasses}
 	on:toggle={handleToggle}
+	on:toggle
 	bind:this={element}
 	class:nojs={!hydrated}
 >
