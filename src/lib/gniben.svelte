@@ -388,7 +388,8 @@
 		security?: string;
 		unselectable?: boolean;
 
-		[key: `data-${string}`]: string | number;
+		// [key: `data-${string}`]: string | number;
+		[key: string]: any;
 	}
 </script>
 
