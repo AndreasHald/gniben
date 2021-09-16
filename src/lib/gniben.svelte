@@ -630,7 +630,13 @@
 			class="absolute {placement}"
 			class:invisible={open === false}
 		>
-			<div class="{direction}-open" {...contentProperties}>
+			<div
+				class:bottom-open={direction === 'bottom'}
+				class:top-open={direction === 'top'}
+				class:left-open={direction === 'left'}
+				class:right-open={direction === 'right'}
+				{...contentProperties}
+			>
 				<slot {open} {element} {target} {content} {hydrated} name="content">popover content</slot>
 			</div>
 		</div>
@@ -681,16 +687,16 @@
 	}
 
 	.bottom-open {
-		animation: bottom-open 0.1s ease-in-out;
+		animation: bottom-open 0.2s ease-in-out;
 	}
 	.top-open {
-		animation: top-open 0.1s ease-in-out;
+		animation: top-open 0.2s ease-in-out;
 	}
 	.left-open {
-		animation: left-open 0.1s ease-in-out;
+		animation: left-open 0.2s ease-in-out;
 	}
 	.right-open {
-		animation: right-open 0.1s ease-in-out;
+		animation: right-open 0.2s ease-in-out;
 	}
 
 	/* Placement nojs styles */
