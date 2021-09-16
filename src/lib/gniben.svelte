@@ -6,13 +6,23 @@
 	type Direction = 'top' | 'bottom' | 'left' | 'right';
 
 	export let placement: Placement = 'bottom-end';
+	export let containerProperties: svelte.JSX.HTMLProps<HTMLDetailsElement> & {
+		[key: `data-${string}`]: string | number;
+	} = {
+		class: 'inline'
+	};
+	export let targetProperties: svelte.JSX.HTMLAttributes<HTMLDivElement> & {
+		[key: `data-${string}`]: string | number;
+	} = {
+		class: 'cursor-pointer inline marker-none rounded focus:outline-none focus:ring ring-indigo-500'
+	};
+	export let contentProperties: svelte.JSX.HTMLAttributes<HTMLDivElement> & {
+		[key: `data-${string}`]: string | number;
+	} = {
+		class: 'rounded-md bg-white border border-gray-300 shadow-lg flex flex-col overflow-hidden'
+	};
 	export let disabled = false;
 	export let matchWidth = false;
-	export let detailsClasses = 'inline';
-	export let targetClasses =
-		'cursor-pointer inline marker-none rounded focus:outline-none focus:ring ring-indigo-500';
-	export let contentClasses =
-		'rounded-md bg-white border border-gray-300 shadow-lg flex flex-col overflow-hidden';
 
 	const offsetModifier = {
 		name: 'offset',
@@ -216,13 +226,13 @@
 
 <details
 	on:click
-	class={detailsClasses}
+	{...containerProperties}
 	on:toggle={handleToggle}
 	on:toggle
 	bind:this={element}
 	class:nojs={!hydrated}
 >
-	<summary bind:this={target} class:pointer-events-none={disabled} class={targetClasses}>
+	<summary {...targetProperties} bind:this={target} class:pointer-events-none={disabled}>
 		<slot {open} {element} {target} {content} {hydrated} name="target">Click me</slot>
 	</summary>
 	<div bind:this={contentOuter}>
@@ -232,7 +242,7 @@
 			class="absolute {placement}"
 			class:invisible={open === false}
 		>
-			<div class="{contentClasses} {direction}-open">
+			<div class="{direction}-open" {...contentProperties}>
 				<slot {open} {element} {target} {content} {hydrated} name="content">popover content</slot>
 			</div>
 		</div>
@@ -439,6 +449,5 @@
 		position: fixed;
 		right: 0;
 		top: 0;
-		z-index: 80;
 	}
 </style>

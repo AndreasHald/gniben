@@ -3,10 +3,14 @@
 </script>
 
 <nav>
-	<a href="/">Docs</a>
+	<a href="/">Home</a>
 	<a href="/examples">Examples</a>
+	<a href="/demo">Properties demo</a>
 </nav>
-<slot />
+
+<div class="max-w-xl mx-auto space-y-20 flex flex-col">
+	<slot />
+</div>
 
 <style global>
 	body {
