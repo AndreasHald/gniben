@@ -412,6 +412,7 @@
 	};
 	export let disabled = false;
 	export let matchWidth = false;
+	export let moveContent = false;
 
 	const offsetModifier = {
 		name: 'offset',
@@ -565,7 +566,9 @@
 
 		open = false;
 
-		// contentOuter.appendChild(content);
+		if (moveContent) {
+			contentOuter.appendChild(content);
+		}
 	}
 
 	function init() {
@@ -603,7 +606,9 @@
 		document.addEventListener('keydown', handleKeys, { capture: true });
 		document.addEventListener('click', handleClick, { capture: true });
 
-		// document.body.appendChild(content);
+		if (moveContent) {
+			document.body.appendChild(content);
+		}
 
 		await tick();
 		const elementToFocus = content.querySelector('[autofocus]');
