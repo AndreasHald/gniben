@@ -461,7 +461,7 @@
 			}
 		}
 		if (event.target)
-			if (!element.contains(event.target as Node)) {
+			if (!content.contains(event.target as Node)) {
 				element.open = false;
 			}
 	}
