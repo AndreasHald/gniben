@@ -394,7 +394,7 @@
 </script>
 
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onDestroy, onMount, tick } from 'svelte';
 	import { createPopper } from '@popperjs/core';
 	import type { Instance, Placement } from '@popperjs/core';
 
@@ -450,6 +450,10 @@
 		};
 	});
 
+	onDestroy(() => {
+		content.remove();
+	});
+
 	function handleClick(event: MouseEvent) {
 		if (!event.target) return;
 		if (event.target instanceof HTMLElement) {
@@ -461,7 +465,7 @@
 			}
 		}
 		if (event.target)
-			if (!content.contains(event.target as Node)) {
+			if (!content.contains(event.target as Node) || !element.contains(event.target as Node)) {
 				element.open = false;
 			}
 	}
@@ -490,6 +494,9 @@
 			const lastElementHasFocus =
 				focusedElement === focusAbleElements[focusAbleElements.length - 1];
 			const firstElementHasFocus = focusedElement === focusAbleElements[0];
+			if (!focusAbleElements.includes(focusedElement) && focusAbleElements.length > 0) {
+				focusAbleElements[0].focus();
+			}
 			if (firstElementHasFocus && event.shiftKey) {
 				event.preventDefault();
 			}
