@@ -451,7 +451,7 @@
 	});
 
 	onDestroy(() => {
-		content.remove();
+		content?.remove();
 	});
 
 	function handleClick(event: MouseEvent) {
@@ -465,7 +465,7 @@
 			}
 		}
 		if (event.target)
-			if (!content.contains(event.target as Node) || !element.contains(event.target as Node)) {
+			if (!content.contains(event.target as Node) && !element.contains(event.target as Node)) {
 				element.open = false;
 			}
 	}
