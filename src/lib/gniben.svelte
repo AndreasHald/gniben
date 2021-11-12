@@ -5,17 +5,18 @@
 	import { onDestroy, onMount, tick } from 'svelte';
 	import { createPopper } from '@popperjs/core';
 	import type { Instance, Placement } from '@popperjs/core';
+	import type { HTMLAttributes } from './types';
 
 	type Direction = 'top' | 'bottom' | 'left' | 'right';
 
 	export let placement: Placement = 'bottom-end';
-	export let containerProperties = {
+	export let containerProperties: HTMLAttributes = {
 		class: 'inline'
 	};
-	export let targetProperties = {
+	export let targetProperties: HTMLAttributes = {
 		class: 'cursor-pointer inline marker-none rounded focus:outline-none focus:ring ring-indigo-500'
 	};
-	export let contentProperties = {
+	export let contentProperties: HTMLAttributes = {
 		class: 'rounded-md bg-white border border-gray-300 shadow-lg flex flex-col overflow-hidden'
 	};
 	export let disabled = false;
