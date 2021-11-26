@@ -253,7 +253,7 @@
 		<div
 			bind:this={content}
 			style={matchWidth ? `width:${targetWidth}px;` : ''}
-			class="absolute {placement}"
+			class="{hydrated ? 'fixed' : 'absolute'} {placement}"
 			class:invisible={open === false}
 		>
 			<div
