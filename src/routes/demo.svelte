@@ -92,18 +92,7 @@
 			</div>
 		</Gniben>
 	</div>
-	<div>
-		<h4 class="header">Focus trap</h4>
-		<p class="subtitle">Try tabbing through the elements</p>
-		<Gniben>
-			<div slot="target" class="button">Open me</div>
-			<div slot="content" class="py-1 px-2 flex flex-col space-y-2">
-				<a href="" class="hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">Link # 1</a>
-				<a href="" class="hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">Link # 2</a>
-				<a href="" class="hover:bg-gray-100 focus:bg-gray-100 focus:outline-none">Link # 3</a>
-			</div>
-		</Gniben>
-	</div>
+
 	<div>
 		<h4 class="header">Close on click</h4>
 		<p class="subtitle">
@@ -125,6 +114,32 @@
 				<button class="button border-0" data-gniben-close>Click me to close</button>
 			</div>
 		</Gniben>
+	</div>
+	<div>
+		<h4 class="header">Nested</h4>
+		<Gniben id="outer" debug>
+			<div slot="target" class="button">Open me</div>
+			<div slot="content" class="flex flex-col p-2 space-y-2">
+				<button autofocus tabindex="0" class="button">does nothing</button>
+				<input type="text" value="some value">
+				<Gniben id="inner" debug>
+					<svelte:fragment slot="target">
+						<div class="button border-0">Click me to open nested</div>
+					</svelte:fragment>
+					<div slot="content">
+						<input type="text" autofocus value="some value">
+						<button class="button border-0" data-gniben-close
+							>Click me to close the nested menu</button
+						>
+					</div>
+				</Gniben>
+			</div>
+		</Gniben>
+	</div>
+	<div class="h-20 w-20 bg-green-200" on:click={() => console.log('outer')}>
+		<div class="h-10 w-10 bg-pink-400" on:click|stopPropagation={() => console.log('inner')}>
+			bob
+		</div>
 	</div>
 	<div class="mt-auto">
 		<h4 class="header">Positional</h4>

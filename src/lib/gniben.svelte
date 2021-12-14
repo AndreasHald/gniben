@@ -54,89 +54,83 @@
 		return () => {
 			if (instance) instance.destroy();
 			if (observer) observer.disconnect();
-			document.removeEventListener('click', handleClick, { capture: true });
-			document.removeEventListener('keydown', handleKeys, { capture: true });
+			removeListeners();
 		};
 	});
+
+	function addListeners() {
+		element.addEventListener('click', handleClickInside);
+		document.addEventListener('click', handleClickOutside);
+		element.addEventListener('keydown', handleEscape);
+		element.addEventListener('keydown', handleUpDown);
+	}
+
+	function removeListeners() {
+		element.removeEventListener('click', handleClickInside);
+		document.removeEventListener('click', handleClickOutside);
+		element.removeEventListener('keydown', handleEscape);
+		element.removeEventListener('keydown', handleUpDown);
+	}
 
 	onDestroy(() => {
 		content?.remove();
 	});
 
-	function handleClick(event: MouseEvent) {
+	function handleClickInside(event: MouseEvent) {
 		if (!event.target) return;
 		if (event.target instanceof HTMLElement) {
 			if (
 				event.target.hasAttribute('data-gniben-close') &&
 				event.target.getAttribute('data-gniben-close') !== 'false'
 			) {
+				event.stopPropagation();
 				element.open = false;
 			}
 		}
+	}
+
+	function handleClickOutside(event: MouseEvent) {
 		if (event.target)
 			if (!content.contains(event.target as Node) && !element.contains(event.target as Node)) {
 				element.open = false;
 			}
 	}
 
-	function handleKeys(event: KeyboardEvent) {
+	function handleEscape(event: KeyboardEvent) {
 		const { code } = event;
-
-		const handledKeys = ['ArrowDown', 'ArrowUp', 'Escape', 'Tab'];
-		if (!handledKeys.includes(code)) return;
-
-		// Handle Escape
-		if (code === 'Escape' && element.hasAttribute('open')) {
-			element.open = false;
-			target.focus();
+		if ((code === 'Escape' || code === 'Tab') && element.hasAttribute('open')) {
 			event.stopPropagation();
-			return;
+			target.focus();
+			element.open = false;
 		}
+	}
 
+	function handleUpDown(event: KeyboardEvent) {
+		const { code } = event;
+		if (!['ArrowDown', 'ArrowUp'].includes(code)) return;
 		const focusedElement = document.activeElement as FocusableElement;
-		const focusAbleElements = getFocusableElements(content);
-
-		if (focusAbleElements.length === 0) return;
-
-		// Handle Tab
-		if (code === 'Tab') {
-			const lastElementHasFocus =
-				focusedElement === focusAbleElements[focusAbleElements.length - 1];
-			const firstElementHasFocus = focusedElement === focusAbleElements[0];
-			if (!focusAbleElements.includes(focusedElement) && focusAbleElements.length > 0) {
-				focusAbleElements[0].focus();
-			}
-			if (firstElementHasFocus && event.shiftKey) {
-				event.preventDefault();
-			}
-			if (lastElementHasFocus && !event.shiftKey) {
-				event.preventDefault();
-			}
-			return;
-		}
-
-		// Handle key up / down
+		const focusableElements = getFocusableElements(content);
+		if (focusableElements.length === 0) return;
 		if (!focusedElement) {
 			if (code === 'ArrowDown') {
-				focusAbleElements[0].focus();
+				focusableElements[0].focus();
 			} else {
-				focusAbleElements[focusAbleElements.length - 1].focus();
+				focusableElements[focusableElements.length - 1].focus();
 			}
 			return;
 		}
 
 		if (!content.contains(focusedElement)) {
 			if (code === 'ArrowDown') {
-				focusAbleElements[0].focus();
+				focusableElements[0].focus();
 			} else {
-				focusAbleElements[focusAbleElements.length - 1].focus();
+				focusableElements[focusableElements.length - 1].focus();
 			}
 			return;
 		}
-
-		const currentIndex = focusAbleElements.indexOf(focusedElement);
+		const currentIndex = focusableElements.indexOf(focusedElement);
 		const targetIndex = code === 'ArrowDown' ? currentIndex + 1 : currentIndex - 1;
-		const targetElement = focusAbleElements[targetIndex];
+		const targetElement = focusableElements[targetIndex];
 		if (targetElement) {
 			targetElement.focus();
 		}
@@ -177,8 +171,7 @@
 			});
 		}
 
-		document.removeEventListener('keydown', handleKeys, { capture: true });
-		document.removeEventListener('click', handleClick, { capture: true });
+		removeListeners();
 
 		if (observer) {
 			observer.disconnect();
@@ -223,8 +216,7 @@
 			childList: true
 		});
 
-		document.addEventListener('keydown', handleKeys, { capture: true });
-		document.addEventListener('click', handleClick, { capture: true });
+		addListeners();
 
 		if (moveContent) {
 			document.body.appendChild(content);
