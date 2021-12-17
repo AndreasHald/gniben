@@ -9,6 +9,7 @@
 
 	type Direction = 'top' | 'bottom' | 'left' | 'right';
 
+	export let id: string = `${Math.random().toString(36).substring(2, 9)}`;
 	export let placement: Placement = 'bottom-end';
 	export let containerProperties: HTMLAttributes = {
 		class: 'inline'
@@ -76,14 +77,20 @@
 		content?.remove();
 	});
 
+	function markChildren() {
+		content.querySelectorAll('*').forEach((child) => {
+			child.setAttribute('data-gniben-parent', id);
+		});
+	}
+
 	function handleClickInside(event: MouseEvent) {
 		if (!event.target) return;
 		if (event.target instanceof HTMLElement) {
 			if (
 				event.target.hasAttribute('data-gniben-close') &&
-				event.target.getAttribute('data-gniben-close') !== 'false'
+				event.target.getAttribute('data-gniben-close') !== 'false' &&
+				event.target.getAttribute('data-gniben-parent') === id
 			) {
-				event.stopPropagation();
 				element.open = false;
 			}
 		}
@@ -195,6 +202,7 @@
 		if (!observer)
 			observer = new MutationObserver(() => {
 				instance.update();
+				markChildren();
 			});
 	}
 
@@ -216,6 +224,7 @@
 			childList: true
 		});
 
+		markChildren();
 		addListeners();
 
 		if (moveContent) {
@@ -231,6 +240,7 @@
 </script>
 
 <details
+	data-gniben-id={id}
 	on:click
 	{...containerProperties}
 	on:toggle={handleToggle}
