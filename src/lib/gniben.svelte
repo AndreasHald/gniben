@@ -39,11 +39,11 @@
 	}
 
 	let hydrated = false;
-	let element: HTMLDetailsElement;
-	let target: HTMLElement;
+	export let element: HTMLDetailsElement;
+	export let target: HTMLElement;
 	let targetWidth: number;
 	let contentOuter: HTMLDivElement;
-	let content: HTMLDivElement;
+	export let content: HTMLDivElement;
 	let instance: Instance;
 	let observer: MutationObserver;
 	let open: boolean;
