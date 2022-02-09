@@ -60,17 +60,17 @@
 	});
 
 	function addListeners() {
-		element.addEventListener('click', handleClickInside);
+		content.addEventListener('click', handleClickInside);
 		document.addEventListener('click', handleClickOutside);
-		element.addEventListener('keydown', handleEscape);
-		element.addEventListener('keydown', handleUpDown);
+		content.addEventListener('keydown', handleEscape);
+		content.addEventListener('keydown', handleUpDown);
 	}
 
 	function removeListeners() {
-		element.removeEventListener('click', handleClickInside);
+		content.removeEventListener('click', handleClickInside);
 		document.removeEventListener('click', handleClickOutside);
-		element.removeEventListener('keydown', handleEscape);
-		element.removeEventListener('keydown', handleUpDown);
+		content.removeEventListener('keydown', handleEscape);
+		content.removeEventListener('keydown', handleUpDown);
 	}
 
 	onDestroy(() => {
