@@ -136,11 +136,6 @@
 			</div>
 		</Gniben>
 	</div>
-	<div class="h-20 w-20 bg-green-200" on:click={() => console.log('outer')}>
-		<div class="h-10 w-10 bg-pink-400" on:click|stopPropagation={() => console.log('inner')}>
-			bob
-		</div>
-	</div>
 	<div class="mt-auto">
 		<h4 class="header">Positional</h4>
 		<p class="subtitle">Resize window to attempt to overflow</p>
@@ -152,6 +147,20 @@
 				>
 			</div>
 		</Gniben>
+	</div>
+
+	<div>
+		<h4 class="header">Wrapped in transform</h4>
+		<div class="bg-green-100 w-80 h-80 transform translate-x-0">
+			<Gniben>
+				<div slot="target" class="button">Open me</div>
+				<div slot="content">
+					<button class="button border-0" data-gniben-close
+						>Click me</button
+					>
+				</div>
+			</Gniben>
+		</div>
 	</div>
 </div>
 

@@ -195,7 +195,7 @@
 		if (!instance)
 			instance = createPopper(target, content, {
 				placement,
-				strategy: 'fixed',
+				strategy: moveContent ? 'fixed' : 'absolute',
 				modifiers: [{ name: 'eventListeners', enabled: false }]
 			});
 
@@ -251,11 +251,11 @@
 	<summary {...targetProperties} bind:this={target} class:pointer-events-none={disabled}>
 		<slot {open} {element} {target} {content} {hydrated} name="target">Click me</slot>
 	</summary>
-	<div bind:this={contentOuter} class="absolute {placement}">
+	<div bind:this={contentOuter} class="absolute">
 		<div
 			bind:this={content}
 			style={matchWidth ? `width:${targetWidth}px;` : ''}
-			class="{hydrated ? 'fixed' : 'absolute'} {placement}"
+			class="{hydrated ? 'fixed' : 'absolute'} whitespace-nowrap"
 			class:invisible={open === false}
 		>
 			<div
