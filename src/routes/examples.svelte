@@ -3,8 +3,66 @@
 </script>
 
 <script lang="ts">
+import { page } from '$app/stores';
+
+	let placement: Placement = $page.url.searchParams.get('placement') as Placement ?? 'top';
 	import Gniben from '$lib/gniben.svelte';
+	import type { Placement } from '@popperjs/core';
 </script>
+
+<div class="w-80 h-80 bg-blue-200 grid gap-4 grid-cols-3 grid-rows-3">
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Top start
+			<input type="radio" name="placement" value='top-start' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Top
+			<input type="radio" name="placement" value='top' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Top end
+			<input type="radio" name="placement" value='top-end' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Left
+			<input type="radio" name="placement" value='left' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<Gniben {placement} contentProperties={{class: 'w-40 h-20 bg-white'}}></Gniben>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Right
+			<input type="radio" name="placement" value='right' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Bottom start
+			<input type="radio" name="placement" value='bottom-start' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Bottom
+			<input type="radio" name="placement" value='bottom' bind:group={placement}>
+		</label>
+	</div>
+	<div class="flex items-center justify-center">
+		<label class="flex flex-col items-center">
+			Bottom end
+			<input type="radio" name="placement" value='bottom-end' bind:group={placement}>
+		</label>
+	</div>
+</div>
 
 <div class="flex w-40">
 	<a
