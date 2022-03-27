@@ -27,7 +27,7 @@
 	const offsetModifier = {
 		name: 'offset',
 		options: {
-			offset: [0, 0]
+			offset: [0, 4]
 		}
 	};
 
@@ -209,9 +209,13 @@
 	async function handleOpen() {
 		init();
 		if (matchWidth) {
-			content.style.width = `${target.clientWidth}px`
+			content.style.width = `${target.clientWidth}px`;
 		}
-		await tick();
+
+		if (moveContent) {
+			document.body.appendChild(content);
+		}
+
 		instance.setOptions({
 			modifiers: [offsetModifier, { name: 'eventListeners', enabled: true }]
 		});
@@ -227,11 +231,6 @@
 		markChildren();
 		addListeners();
 
-		if (moveContent) {
-			document.body.appendChild(content);
-		}
-
-		await tick();
 		const elementToFocus = content.querySelector('[autofocus]');
 		if (elementToFocus && 'focus' in elementToFocus) {
 			(elementToFocus as FocusableElement).focus();
@@ -284,41 +283,41 @@
 	@keyframes bottom-open {
 		0% {
 			opacity: 0;
-			transform: scale(0.9) translateY(-10px);
+			transform: scale(0.9);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1) translateY(0px);
+			transform: scale(1);
 		}
 	}
 	@keyframes top-open {
 		0% {
 			opacity: 0;
-			transform: scale(0.9) translateY(10px);
+			transform: scale(0.9);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1) translateY(0px);
+			transform: scale(1);
 		}
 	}
 	@keyframes left-open {
 		0% {
 			opacity: 0;
-			transform: scale(0.9) translateX(10px);
+			transform: scale(0.9);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1) translateX(0px);
+			transform: scale(1);
 		}
 	}
 	@keyframes right-open {
 		0% {
 			opacity: 0;
-			transform: scale(0.9) translateX(-10px);
+			transform: scale(0.9);
 		}
 		100% {
 			opacity: 1;
-			transform: scale(1) translateX(0px);
+			transform: scale(1);
 		}
 	}
 

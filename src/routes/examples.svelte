@@ -36,7 +36,9 @@ import { page } from '$app/stores';
 		</label>
 	</div>
 	<div class="flex items-center justify-center">
-		<Gniben {placement} contentProperties={{class: 'w-40 h-20 bg-white'}}></Gniben>
+		<Gniben targetProperties={{
+			class: `example-btn marker-none rounded-md py-2`
+		}} {placement} contentProperties={{class: 'w-40 h-20 bg-white'}}></Gniben>
 	</div>
 	<div class="flex items-center justify-center">
 		<label class="flex flex-col items-center">
