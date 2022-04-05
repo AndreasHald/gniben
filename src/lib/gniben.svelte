@@ -97,10 +97,20 @@
 	}
 
 	function handleClickOutside(event: MouseEvent) {
-		if (event.target)
+		if (event.target) {
+			if (event.target instanceof HTMLElement) {
+				const parent = event.target.getAttribute('data-gniben-parent');
+				if (parent) {
+					const targetWithInContent = content.querySelectorAll(`details[data-gniben-id="${parent}"]`);
+					if (targetWithInContent.length > 0) {
+						return;
+					}
+				}
+			}
 			if (!content.contains(event.target as Node) && !element.contains(event.target as Node)) {
 				element.open = false;
 			}
+		}
 	}
 
 	function handleEscape(event: KeyboardEvent) {

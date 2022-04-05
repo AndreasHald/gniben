@@ -32,6 +32,18 @@
 		</Gniben>
 	</div>
 	<div>
+		<h4 class="header">Nested global</h4>
+		<Gniben moveContent>
+			<div slot="target" class="button">More</div>
+			<div slot="content" class="flex flex-col w-44">
+				<Gniben moveContent>
+					<div slot="target" class="button">even more</div>
+			<div slot="content" class="flex flex-col w-44">inner</div>
+				</Gniben>
+			</div>
+		</Gniben>
+	</div>
+	<div>
 		<h4 class="header">Autofocus</h4>
 		<p class="subtitle">
 			Will automatically autofocus the first element with the autofocus attribute
