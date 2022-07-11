@@ -85,7 +85,7 @@
 
 	function handleClickInside(event: MouseEvent) {
 		if (!event.target) return;
-		if (event.target instanceof HTMLElement) {
+		if (event.target instanceof HTMLElement || event.target instanceof SVGElement) {
 			if (
 				event.target.hasAttribute('data-gniben-close') &&
 				event.target.getAttribute('data-gniben-close') !== 'false' &&
